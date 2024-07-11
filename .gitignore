@@ -1,0 +1,5 @@
+# .gitignore
+dashboard-report/
+.env
+.idea/
+
