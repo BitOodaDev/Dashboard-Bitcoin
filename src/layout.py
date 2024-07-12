@@ -47,7 +47,7 @@ def render_data_table(df_filtered):
     col_select = st.container()
     with col_select:
         all_columns = df_filtered.columns.tolist()
-        selected_columns = st.multiselect("Select columns", all_columns, default=["PRICE_USD_CLOSE", "HASH_RATE_MEAN"])
+        selected_columns = st.multiselect("Select columns", all_columns, default=["PRICE_USD_CLOSE", "HASH_RATE_MEAN","Time"])
     
     st.markdown('<div class="title-box">Data Table</div>', unsafe_allow_html=True)
     if selected_columns:
