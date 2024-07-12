@@ -21,6 +21,6 @@ def load_data():
     conn = get_snowflake_connection()
     query = "SELECT * FROM btc_daily ORDER BY TIMESTAMP"
     df = pd.read_sql(query, conn)
-    df['t'] = pd.to_datetime(df['TIMESTAMP'])
+    df['Time'] = pd.to_datetime(df['TIMESTAMP'])
     conn.close()
     return df

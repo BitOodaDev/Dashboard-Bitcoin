@@ -26,4 +26,15 @@
     border-radius: 10px;
     padding: 10px;
     margin-bottom: 20px;
+    
+}
+
+/* Custom CSS for smaller date input fields */
+.date-input-container {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+.date-input-container .stDateInput {
+    width: 150px !important;
 }
