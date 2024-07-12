@@ -1,0 +1,29 @@
+/* style.css */
+.plot-container {
+    padding: 10px;
+    margin: 0;
+    border-radius: 10px;
+    height: 500px;
+}
+
+.separator {
+    margin: 20px 0;
+}
+
+.title-box {
+    background-color: #111111;
+    color: white;
+    border: 1px solid white;
+    border-radius: 5px;
+    padding: 10px;
+    text-align: center;
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.boundary {
+    border: 2px solid white;
+    border-radius: 10px;
+    padding: 10px;
+    margin-bottom: 20px;
+}
