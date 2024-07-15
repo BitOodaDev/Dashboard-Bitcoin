@@ -33,18 +33,18 @@ def plot_comparison_chart(df, start_date, end_date):
     fig.update_traces(selector=dict(name='HASH_RATE_MEAN'), opacity=0.5)
     fig = add_border(fig)
     fig.update_layout(
-        height=535,
+        height=450,
         width=700,
         margin=dict(l=10, r=10, t=10, b=10)
     )
     return fig
 
-def plot_interactive_chart(df, start_date, end_date, selected_column):
+def plot_interactive_chart(df, start_date, end_date):
     start_date = pd.to_datetime(start_date)
     end_date = pd.to_datetime(end_date)
     df_filtered = df[(df['Time'] >= start_date) & (df['Time'] <= end_date)].copy()
 
-    fig = px.line(df_filtered, x="Time", y=selected_column, markers=True)
+    fig = px.line(df_filtered, x="Time", y="PRICE_USD_CLOSE", markers=True)
     fig.update_traces(line=dict(width=3), marker=dict(size=6), opacity=0.8)
     fig = add_border(fig)
     fig.update_layout(
@@ -53,6 +53,7 @@ def plot_interactive_chart(df, start_date, end_date, selected_column):
         margin=dict(l=10, r=10, t=10, b=10)
     )
     return fig
+
 
 def plot_daily_btc_fees(df, start_date, end_date):
     start_date = pd.to_datetime(start_date)
@@ -161,57 +162,22 @@ def plot_difficulty_growth_rate(df, start_date, end_date):
                 '<b>Growth Rate</b>: %{y:.2f}%<br>' +
                 '<b>Difficulty</b>: %{customdata:,.0f}<extra></extra>'
             ),
-            customdata=df_difficulty_change['DIFFICULTY_LATEST']
+            customdata=df_difficulty_change['DIFFICULTY_LATEST'],
+            showlegend= False
         )
     )
     
+    fig = add_border(fig)
     # Update layout
     fig.update_layout(
-        title="Difficulty Growth Rate",
         height=450,
         width=600,
-        margin=dict(l=5, r=5, t=30, b=5),
         yaxis_title="Growth Rate (%)",
-        xaxis_title="Date",
-        plot_bgcolor='rgba(0,0,0,0)',
-        paper_bgcolor='rgba(0,0,0,0)',
+        xaxis_title="Time",
         font=dict(color='white'),
-        hovermode="x unified"
     )
     
-    # Update x-axis
-    fig.update_xaxes(
-        tickformat="%b %Y",
-        tickangle=45,
-        tickmode='auto',
-        nticks=10,
-        showgrid=True,
-        gridcolor='rgba(255,255,255,0.1)',
-        zeroline=False,
-    )
-    
-    # Update y-axis
-    fig.update_yaxes(
-        showgrid=True,
-        gridcolor='rgba(255,255,255,0.1)',
-        zeroline=False,
-    )
-    
-    # Add border
-    fig.update_layout(
-        shapes=[
-            dict(
-                type="rect",
-                xref="paper",
-                yref="paper",
-                x0=0,
-                y0=0,
-                x1=1,
-                y1=1,
-                line=dict(color="white", width=2),
-            )
-        ]
-    )
+
     
     return fig
 # def plot_difficulty_growth_rate(df, start_date, end_date):

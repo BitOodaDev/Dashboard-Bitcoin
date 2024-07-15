@@ -27,6 +27,7 @@ def filter_data_by_date(df, start_date, end_date):
     end_datetime = pd.to_datetime(end_date)
     return df[(df['Time'] >= start_datetime) & (df['Time'] <= end_datetime)]
 
+
 def render_charts(df_filtered, start_datetime, end_datetime):
     col1, col2 = st.columns([3, 2])
     with col1:
@@ -34,12 +35,10 @@ def render_charts(df_filtered, start_datetime, end_datetime):
         fig1 = plot_comparison_chart(df_filtered, start_datetime, end_datetime)
         st.plotly_chart(fig1, use_container_width=True, config={'displayModeBar': False})
     with col2:
-        st.markdown('<div class="title-box">Price Analysis</div>', unsafe_allow_html=True)
-        numeric_columns = df_filtered.select_dtypes(include=[np.number]).columns.tolist()
-        numeric_columns = [col for col in numeric_columns if col != 'TIMESTAMP']
-        selected_column = st.selectbox("Select a column to display", numeric_columns)
-        fig2 = plot_interactive_chart(df_filtered, start_datetime, end_datetime, selected_column)
+        st.markdown('<div class="title-box">BTC Price</div>', unsafe_allow_html=True)
+        fig2 = plot_interactive_chart(df_filtered, start_datetime, end_datetime)
         st.plotly_chart(fig2, use_container_width=True, config={'displayModeBar': False})
+
 
 def render_data_table(df_filtered):
     st.markdown("<h3 style='text-align: center;'>Data Table</h3>", unsafe_allow_html=True)
