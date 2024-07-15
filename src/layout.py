@@ -1,6 +1,6 @@
 import streamlit as st
 import pandas as pd
-from plots import plot_comparison_chart, plot_interactive_chart
+from plots import plot_comparison_chart, plot_interactive_chart, plot_daily_btc_fees, plot_daily_btc_ex_fees, plot_difficulty_growth_rate
 from data import load_data
 import numpy as np
 
@@ -14,8 +14,8 @@ def render_title():
 
 def get_date_inputs():
     st.markdown('<div class="date-input-container">', unsafe_allow_html=True)
-    start_date = st.date_input("Start date", pd.to_datetime('2024-01-01'))
-    end_date = st.date_input("End date", pd.to_datetime('2024-12-31'))
+    start_date = st.date_input("Start date", pd.to_datetime('2024-05-01'))
+    end_date = st.date_input("End date", pd.to_datetime('2024-07-15'))
     st.markdown('</div>', unsafe_allow_html=True)
     return start_date, end_date
 
@@ -33,7 +33,6 @@ def render_charts(df_filtered, start_datetime, end_datetime):
         st.markdown('<div class="title-box">Hash Rate Comparison</div>', unsafe_allow_html=True)
         fig1 = plot_comparison_chart(df_filtered, start_datetime, end_datetime)
         st.plotly_chart(fig1, use_container_width=True, config={'displayModeBar': False})
-
     with col2:
         st.markdown('<div class="title-box">Price Analysis</div>', unsafe_allow_html=True)
         numeric_columns = df_filtered.select_dtypes(include=[np.number]).columns.tolist()
@@ -47,8 +46,8 @@ def render_data_table(df_filtered):
     col_select = st.container()
     with col_select:
         all_columns = df_filtered.columns.tolist()
-        selected_columns = st.multiselect("Select columns", all_columns, default=["PRICE_USD_CLOSE", "HASH_RATE_MEAN","Time"])
-    
+        selected_columns = st.multiselect("Select columns", all_columns, default=["PRICE_USD_CLOSE", "HASH_RATE_MEAN", "Time"])
+
     st.markdown('<div class="title-box">Data Table</div>', unsafe_allow_html=True)
     if selected_columns:
         st.dataframe(df_filtered[selected_columns].style.set_table_styles(
@@ -71,3 +70,25 @@ def render_dashboard():
         render_charts(df_filtered, start_date, end_date)
         st.markdown('<div class="separator"></div>', unsafe_allow_html=True)
         render_data_table(df_filtered)
+        st.markdown('<div class="separator"></div>', unsafe_allow_html=True)
+        
+        col1, col2 = st.columns([1, 1])
+        with col2:
+            st.markdown('<div class="title-box">Daily BTC Fees %</div>', unsafe_allow_html=True)
+            fig3 = plot_daily_btc_fees(df_filtered, start_date, end_date)
+            st.plotly_chart(fig3, use_container_width=True, config={'displayModeBar': False})
+        with col1:
+            st.markdown('<div class="title-box">Daily BTC Ex Fees %</div>', unsafe_allow_html=True)
+            fig4 = plot_daily_btc_ex_fees(df_filtered, start_date, end_date)
+            st.plotly_chart(fig4, use_container_width=True, config={'displayModeBar': False})
+        col1, col2 = st.columns([1, 1])
+        with col1:
+            st.markdown('<div class="title-box">Difficulty Growth Rate</div>', unsafe_allow_html=True)
+            fig5 = plot_difficulty_growth_rate(df_filtered, start_date, end_date)
+            st.plotly_chart(fig5, use_container_width=True, config={'displayModeBar': False})
+
+if __name__ == "__main__":
+    render_dashboard()
+
+if __name__ == "__main__":
+    render_dashboard()
