@@ -69,26 +69,28 @@ def render_dashboard():
         st.markdown('<div class="separator"></div>', unsafe_allow_html=True)
         render_charts(df_filtered, start_date, end_date)
         st.markdown('<div class="separator"></div>', unsafe_allow_html=True)
-        render_data_table(df_filtered)
-        st.markdown('<div class="separator"></div>', unsafe_allow_html=True)
+        
+        st.markdown('<div class="title-box">BTC ex Fees</div>', unsafe_allow_html=True)
+        fig4 = plot_daily_btc_ex_fees(df_filtered, start_date, end_date)
+        st.plotly_chart(fig4, use_container_width=True, config={'displayModeBar': False})
         
         col1, col2 = st.columns([1, 1])
         with col2:
-            st.markdown('<div class="title-box">Daily BTC Fees %</div>', unsafe_allow_html=True)
+            st.markdown('<div class="title-box">BTC Fees %</div>', unsafe_allow_html=True)
             fig3 = plot_daily_btc_fees(df_filtered, start_date, end_date)
             st.plotly_chart(fig3, use_container_width=True, config={'displayModeBar': False})
-        with col1:
-            st.markdown('<div class="title-box">Daily BTC Ex Fees %</div>', unsafe_allow_html=True)
-            fig4 = plot_daily_btc_ex_fees(df_filtered, start_date, end_date)
-            st.plotly_chart(fig4, use_container_width=True, config={'displayModeBar': False})
-        col1, col2 = st.columns([1, 1])
         with col1:
             st.markdown('<div class="title-box">Difficulty Growth Rate</div>', unsafe_allow_html=True)
             fig5 = plot_difficulty_growth_rate(df_filtered, start_date, end_date)
             st.plotly_chart(fig5, use_container_width=True, config={'displayModeBar': False})
 
-if __name__ == "__main__":
-    render_dashboard()
+        # col3, col4 = st.columns([1, 1])
+        # with col3:
+        
+        
+
+        st.markdown('<div class="separator"></div>', unsafe_allow_html=True)
+        render_data_table(df_filtered)
 
 if __name__ == "__main__":
     render_dashboard()

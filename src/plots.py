@@ -63,7 +63,7 @@ def plot_daily_btc_fees(df, start_date, end_date):
     fig.update_traces(line=dict(width=2, color = 'orange'), marker=dict(size=5, color = 'orange'), opacity=0.8)
     fig = add_border(fig)
     fig.update_layout(
-        height=300,
+        height=450,
         width=600,
         margin=dict(l=10, r=10, t=10, b=10)
     )
@@ -81,7 +81,7 @@ def plot_daily_btc_ex_fees(df, start_date, end_date):
     fig.update_traces(line=dict(width=2, color='yellow'), marker=dict(size=5, color='yellow'), opacity=0.8)
     fig = add_border(fig)
     fig.update_layout(
-        height=300,
+        height=500,
         width=600,
         margin=dict(l=10, r=10, t=10, b=10)
     )
@@ -168,7 +168,7 @@ def plot_difficulty_growth_rate(df, start_date, end_date):
     # Update layout
     fig.update_layout(
         title="Difficulty Growth Rate",
-        height=300,
+        height=450,
         width=600,
         margin=dict(l=5, r=5, t=30, b=5),
         yaxis_title="Growth Rate (%)",
