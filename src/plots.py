@@ -19,83 +19,6 @@ def add_border(fig):
 
 
 
-# def add_border(fig):
-#     # Detect the current theme
-#     theme = st.get_current_style()
-    
-#     # Debugging to verify the detected theme
-#     st.write(f"Detected theme: {theme}")
-    
-#     # Set the layout based on the detected theme
-#     if theme == "dark":
-#         fig.update_layout(
-#             margin=dict(l=10, r=10, t=10, b=10),
-#             font=dict(color="white"),
-#             paper_bgcolor="rgba(0,0,0,0)",  # Transparent background
-#             plot_bgcolor="rgba(30,30,30,1)",  # Dark grey plot area
-#             xaxis=dict(showgrid=True, gridcolor='rgba(255,255,255,0.1)', zeroline=True, showline=True, linewidth=2, linecolor='white', mirror=True),
-#             yaxis=dict(showgrid=True, gridcolor='rgba(255,255,255,0.1)', zeroline=True, showline=True, linewidth=2, linecolor='white', mirror=True),
-#             showlegend=True,
-#             legend=dict(
-#                 bgcolor='rgba(0,0,0,0)',
-#                 font=dict(color='white')
-#             )
-#         )
-#     elif theme == "light":
-#         fig.update_layout(
-#             margin=dict(l=10, r=10, t=10, b=10),
-#             font=dict(color="black"),
-#             paper_bgcolor="rgba(255, 255, 255, 1)", 
-#             plot_bgcolor="rgba(240,240,240,1)",  # Light grey plot area
-#             xaxis=dict(showgrid=True, gridcolor='lightgray', zeroline=True, showline=True, linewidth=2, linecolor='black', mirror=True),
-#             yaxis=dict(showgrid=True, gridcolor='lightgray', zeroline=True, showline=True, linewidth=2, linecolor='black', mirror=True),
-#             showlegend=True,
-#             legend=dict(
-#                 bgcolor='rgba(255,255,255,0)',
-#                 font=dict(color='black')
-#             )
-#         )
-#     else:
-#         st.write("Unknown theme detected. Using default light theme settings.")
-#         fig.update_layout(
-#             margin=dict(l=10, r=10, t=10, b=10),
-#             font=dict(color="black"),
-#             paper_bgcolor="rgba(255, 255, 255, 1)", 
-#             plot_bgcolor="rgba(240,240,240,1)",  # Light grey plot area
-#             xaxis=dict(showgrid=True, gridcolor='lightgray', zeroline=True, showline=True, linewidth=2, linecolor='black', mirror=True),
-#             yaxis=dict(showgrid=True, gridcolor='lightgray', zeroline=True, showline=True, linewidth=2, linecolor='black', mirror=True),
-#             showlegend=True,
-#             legend=dict(
-#                 bgcolor='rgba(255,255,255,0)',
-#                 font=dict(color='black')
-#             )
-#         )
-#     return fig
-# def add_border(fig):
-#     theme = get_theme()
-#     if theme == "Dark":
-#         fig.update_layout(
-#             margin=dict(l=10, r=10, t=10, b=10),
-#             # paper_bgcolor="rgba(50, 50, 50, 0.5)",  # Set a translucent grey background for the entire paper
-#             # plot_bgcolor="rgba(30,30,30,0.8)",  # Set a translucent grey background for the plot area
-#             font=dict(color="white"),
-#             xaxis=dict(showgrid=True, gridcolor='gray', zeroline=True, showline=True, linewidth=2, linecolor='white', mirror=True),
-#             yaxis=dict(showgrid=True, gridcolor='gray', zeroline=True, showline=True, linewidth=2, linecolor='white', mirror=True),
-#             showlegend=True
-#     )
-
-#     else:
-#         fig.update_layout(
-#             margin=dict(l=10, r=10, t=10, b=10),
-#             paper_bgcolor="rgba(255, 255, 255, 1)",  # White background for the entire paper
-#             plot_bgcolor="rgba(240, 240, 240, 1)",  # Light grey background for the plot area
-#             font=dict(color="black"),
-#             xaxis=dict(showgrid=True, gridcolor='gray', zeroline=True, showline=True, linewidth=2, linecolor='black', mirror=True),
-#             yaxis=dict(showgrid=True, gridcolor='gray', zeroline=True, showline=True, linewidth=2, linecolor='black', mirror=True),
-#             showlegend=True
-#         )
-#     return fig
-
 
 def plot_comparison_chart(df, start_date, end_date):
     start_date = pd.to_datetime(start_date)
@@ -197,6 +120,32 @@ def plot_daily_btc_ex_fees(df, start_date, end_date):
         width=600,
         margin=dict(l=10, r=10, t=10, b=10),
         yaxis_title="Volume Mined Sum"
+    )
+    return fig
+
+def plot_daily_spot_hash(df, start_date, end_date):
+    start_date = pd.to_datetime(start_date)
+    end_date = pd.to_datetime(end_date)
+    df_filtered = df[(df['Time'] >= start_date) & (df['Time'] <= end_date)].copy()
+    
+    # Calculate the spot hash price
+    df_filtered['SPOT_HASH_PRICE'] = ((df_filtered['VOLUME_MINED_SUM'] * df_filtered['REVENUE_FROM_FEES'] / (1 - df_filtered['REVENUE_FROM_FEES'])+ df_filtered['VOLUME_MINED_SUM'])\
+                                       * df_filtered['PRICE_USD_CLOSE'] * (10**15)) / df_filtered['HASH_RATE_MEAN']
+
+    fig = px.line(df_filtered, x="Time", y="SPOT_HASH_PRICE", title="", markers=True,
+                  labels={"SPOT_HASH_PRICE": "Spot Hash Price"})
+    fig.update_traces(
+        line=dict(width=2, color='Goldenrod'),
+        marker=dict(size=5, color='Goldenrod'),
+        opacity=0.8,
+        hovertemplate='Time=%{x}<br>Spot Hash Price=%{y:.2f}<extra></extra>'
+    )
+    fig = add_border(fig)
+    fig.update_layout(
+        height=500,
+        width=600,
+        margin=dict(l=10, r=10, t=10, b=10),
+        yaxis_title="Spot Hash Price"
     )
     return fig
 

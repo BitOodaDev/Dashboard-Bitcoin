@@ -1,11 +1,11 @@
 import streamlit as st
 import pandas as pd
-from plots import plot_comparison_chart, plot_interactive_chart, plot_daily_btc_fees, plot_daily_btc_ex_fees, plot_difficulty_growth_rate
+from plots import plot_comparison_chart, plot_interactive_chart, plot_daily_btc_fees, plot_daily_btc_ex_fees, plot_difficulty_growth_rate, plot_daily_spot_hash
 from data import load_data
 import numpy as np
 
 def load_css():
-    with open('style.css') as f:
+    with open('./style.css') as f:
         st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
 
 def render_title():
@@ -45,16 +45,28 @@ def render_data_table(df_filtered):
     col_select = st.container()
     with col_select:
         all_columns = df_filtered.columns.tolist()
-        selected_columns = st.multiselect("Select columns", all_columns, default=["PRICE_USD_CLOSE", "HASH_RATE_MEAN", "Time"])
+        selected_columns = st.multiselect("Select columns", all_columns, default=["PRICE_USD_CLOSE", "HASH_RATE_MEAN", "Time", "DIFFICULTY_LATEST"])
+
+    # Convert hash rate to petahashes (PH)
+    if "HASH_RATE_MEAN" in df_filtered.columns:
+        df_filtered["HASH_RATE_MEAN_PH"] = df_filtered["HASH_RATE_MEAN"] / 10**15
+
+    # Convert difficulty to terahashes (TH)
+    if "DIFFICULTY_LATEST" in df_filtered.columns:
+        df_filtered["DIFFICULTY_LATEST_TH"] = df_filtered["DIFFICULTY_LATEST"] / 10**12
 
     st.markdown('<div class="title-box">Data Table</div>', unsafe_allow_html=True)
     if selected_columns:
+        # Replace HASH_RATE_MEAN with HASH_RATE_MEAN_PH and DIFFICULTY_LATEST with DIFFICULTY_LATEST_TH in the selected columns
+        selected_columns = ["HASH_RATE_MEAN_PH" if col == "HASH_RATE_MEAN" else col for col in selected_columns]
+        selected_columns = ["DIFFICULTY_LATEST_TH" if col == "DIFFICULTY_LATEST" else col for col in selected_columns]
         st.dataframe(df_filtered[selected_columns].style.set_table_styles(
             [{'selector': 'th', 'props': [('text-align', 'center')]},
              {'selector': 'td', 'props': [('text-align', 'center')]}]
-        ), column_config={"TIMESTAMP": st.column_config.DatetimeColumn(format="YYYY-MM-DD")})
+        ), use_container_width=True, hide_index=True)
     else:
         st.warning("Please select at least one column to display.")
+
 
 def render_dashboard():
     load_css()
@@ -68,10 +80,17 @@ def render_dashboard():
         st.markdown('<div class="separator"></div>', unsafe_allow_html=True)
         render_charts(df_filtered, start_date, end_date)
         st.markdown('<div class="separator"></div>', unsafe_allow_html=True)
-        
-        st.markdown('<div class="title-box">BTC ex Fees</div>', unsafe_allow_html=True)
-        fig4 = plot_daily_btc_ex_fees(df_filtered, start_date, end_date)
-        st.plotly_chart(fig4, use_container_width=True, config={'displayModeBar': False})
+
+        col3, col4 = st.columns([1, 1])
+        with col3:
+            st.markdown('<div class="title-box">BTC ex Fees</div>', unsafe_allow_html=True)
+            fig4 = plot_daily_btc_ex_fees(df_filtered, start_date, end_date)
+            st.plotly_chart(fig4, use_container_width=True, config={'displayModeBar': False})
+        with col4:
+            st.markdown('<div class="title-box">Spot Hash Price</div>', unsafe_allow_html=True)
+            fig6 = plot_daily_spot_hash(df_filtered, start_date, end_date)
+            st.plotly_chart(fig6, use_container_width=True, config={'displayModeBar': False})
+
         
         col1, col2 = st.columns([1, 1])
         with col2:
@@ -98,7 +117,7 @@ def render_dashboard():
         setTimeout(function() {
             console.log("Full app JavaScript - refreshing page");
             location.reload();
-        }, 6000); // Refresh every 6 seconds
+        }, 60000); // Refresh every 6 minutes 
     });
     </script>
     """
