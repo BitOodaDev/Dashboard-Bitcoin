@@ -76,9 +76,9 @@ def plot_daily_btc_ex_fees(df, start_date, end_date):
     df_filtered = df[(df['Time'] >= start_date) & (df['Time'] <= end_date)].copy()
 
     # Calculate Daily BTC Ex Fees
-    df_filtered['DAILY_BTC_EX_FEES'] = df_filtered['VOLUME_MINED_SUM'] * df_filtered['REVENUE_FROM_FEES'] / (1 - df_filtered['REVENUE_FROM_FEES']) + df_filtered['VOLUME_MINED_SUM']
+    # df_filtered['DAILY_BTC_EX_FEES'] = df_filtered['VOLUME_MINED_SUM'] * df_filtered['REVENUE_FROM_FEES'] / (1 - df_filtered['REVENUE_FROM_FEES']) + df_filtered['VOLUME_MINED_SUM']
 
-    fig = px.line(df_filtered, x="Time", y="DAILY_BTC_EX_FEES", title="", markers=True)
+    fig = px.line(df_filtered, x="Time", y="VOLUME_MINED_SUM", title="", markers=True)
     fig.update_traces(line=dict(width=2, color='yellow'), marker=dict(size=5, color='yellow'), opacity=0.8)
     fig = add_border(fig)
     fig.update_layout(

@@ -10,7 +10,7 @@ def load_css():
 
 def render_title():
     st.markdown("<h1 style='text-align: center;'>Bitcoin Dashboard</h1>", unsafe_allow_html=True)
-    st.markdown("<p style='text-align: center;'>_Prototype v0.0.1_</p>", unsafe_allow_html=True)
+    st.markdown("<p style='text-align: center;'>_Prototype v1.0.0_</p>", unsafe_allow_html=True)
 
 def get_date_inputs():
     st.markdown('<div class="date-input-container">', unsafe_allow_html=True)
@@ -26,7 +26,7 @@ def filter_data_by_date(df, start_date, end_date):
     start_datetime = pd.to_datetime(start_date)
     end_datetime = pd.to_datetime(end_date)
     return df[(df['Time'] >= start_datetime) & (df['Time'] <= end_datetime)]
-
+    
 
 def render_charts(df_filtered, start_datetime, end_datetime):
     col1, col2 = st.columns([3, 2])
