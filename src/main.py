@@ -4,8 +4,10 @@ from layout import render_dashboard
 
 def main():
     load_env()
-    st.set_page_config(page_title="Bitcoin Dashboard", page_icon=":bar_chart:", layout="wide")
+    st.set_page_config(page_title="Bitcoin Dashboard", page_icon=":bar_chart:", layout="wide", initial_sidebar_state="expanded")
     render_dashboard()
 
 if __name__ == "__main__":
     main()
+
+
