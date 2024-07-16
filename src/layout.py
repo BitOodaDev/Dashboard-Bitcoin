@@ -91,5 +91,18 @@ def render_dashboard():
         st.markdown('<div class="separator"></div>', unsafe_allow_html=True)
         render_data_table(df_filtered)
 
+    html_code = """
+    <script>
+    document.addEventListener("DOMContentLoaded", function(event) { 
+        console.log("Full app JavaScript - injected and running");
+        setTimeout(function() {
+            console.log("Full app JavaScript - refreshing page");
+            location.reload();
+        }, 6000); // Refresh every 6 seconds
+    });
+    </script>
+    """
+    st.components.v1.html(html_code)
+
 if __name__ == "__main__":
     render_dashboard()
