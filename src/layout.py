@@ -15,7 +15,7 @@ def render_title():
 def get_date_inputs():
     st.markdown('<div class="date-input-container">', unsafe_allow_html=True)
     start_date = st.date_input("Start date", pd.to_datetime('2024-05-01'))
-    end_date = st.date_input("End date", pd.to_datetime('2024-07-15'))
+    end_date = st.date_input("End date", pd.to_datetime('2024-12-01'))
     st.markdown('</div>', unsafe_allow_html=True)
     return start_date, end_date
 
